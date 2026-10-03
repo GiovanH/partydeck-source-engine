@@ -1,0 +1,22 @@
+{
+  "name": "Half-Life 2 Deathmatch",
+  "author": "GiovanH",
+  "version": "0.1",
+  "info": "",
+  "spec_ver": 3,
+  "path_gameroot": "~/.local/share/Steam/steamapps/common/Half-Life 2 Deathmatch/",
+  "runtime": "sniper",
+  "exec": "hl2mp.sh",
+  "args": "-game hl2mp -gamepadui -steam -novid -windowed -noborder -insecure +sv_lan 1 +cl_disablehtmlmotd 1 +exec $INSTANCENUM",
+  "env": "",
+  "sdl2_override": "No",
+  "pause_between_starts": 5.0,
+  "use_mangohud": false,
+  "use_goldberg": true,
+  "ps_xinput": true,
+  "steam_appid": 320,
+  "game_null_paths": [],
+  "overrides": {
+    "profile_unique_dirs": true
+  }
+}
