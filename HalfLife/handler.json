@@ -1,0 +1,19 @@
+{
+  "name": "Half-Life",
+  "author": "GiovanH",
+  "version": "0.1",
+  "info": "",
+  "spec_ver": 3,
+  "path_gameroot": "/home/gio/.local/share/Steam/steamapps/common/Half-Life/",
+  "runtime": "scout",
+  "exec": "hl.sh",
+  "args": "-novid +sv_lan 1 +exec $INSTANCENUM",
+  "env": "",
+  "sdl2_override": "Srt",
+  "pause_between_starts": 5.0,
+  "use_mangohud": false,
+  "use_goldberg": true,
+  "ps_xinput": true,
+  "steam_appid": 70,
+  "game_null_paths": []
+}
