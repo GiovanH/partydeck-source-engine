@@ -17,6 +17,7 @@
   "steam_appid": 320,
   "game_null_paths": [],
   "overrides": {
+    "vertical_two_player": true,
     "profile_unique_dirs": true
   }
 }

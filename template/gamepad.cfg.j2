@@ -1,0 +1,76 @@
+{#- "goldsrc" or "source" #}
+{%- set MOD = MOD | default("hl2") %}
+{%- set ENGINE = ENGINE | default("source") %}
+
+{%- macro bind_engine(action, values, bind="bind") %}
+{%- set i = ["source", "goldsrc"].index(ENGINE) -%}
+{{bind}} {{ values[i] }} {{ action }}
+{%- endmacro -%}
+
+{%- macro bind_all(action, values) %}
+{%- for v in values %}
+bind {{ v }} {{ action }}
+{%- endfor -%}
+{%- endmacro -%}
+
+joystick "1"
+
+// joy_advaxisx "3"
+// joy_advaxisy "1"
+// joy_advaxisr "2"
+// joy_advaxisu "4"
+// joy_pitchsensitivity "1.0"
+// joy_yawsensitivity "-1.25"
+// joy_response_move "5"
+// joy_response_look "1"
+// joy_lowend "0.65"
+// joy_lowmap "0.15"
+// joy_accelscale "1.4"
+// joy_autoaimdampenrange "0.85"
+// joy_autoaimdampen "0.5"
+
+hud_fastswitch 0
+
+// Try all the names.
+
+{{ bind_engine("+jump", ("A_BUTTON", "JOY1")) }}
+{{ bind_engine("+duck", ("B_BUTTON", "JOY2")) }}
+{{ bind_engine("+reload", ("X_BUTTON", "JOY3")) }}
+{{ bind_engine("+use", ("Y_BUTTON", "JOY4")) }}
+
+{{ bind_all("+showscores", ("BACK", "JOY7", "AUX5")) }}
+{{ bind_all("pause",  ("START", "JOY8", "AUX7")) }}
+
+{{ bind_engine("invprev", ("LEFT", "AUX14")) }}
+{{ bind_engine("invnext", ("RIGHT", "AUX15")) }}
+// {{ bind_engine("+speed", ("STICK1", "AUX8")) }}
+// flashlight
+{{ bind_engine('"impulse 100"', ("STICK1", "AUX8")) }}
+
+{%- if ENGINE == "source" %}
+{{ bind_engine("toggle_zoom", ("STICK2", "AUX99")) }}
+{% endif %}
+
+{%- if ENGINE == "source" %}
+
+// Source engine: triggers and shoulders
+
+{{ bind_engine("lastinv", ("L_SHOULDER", "AUX10")) }}
+{{ bind_engine("+attack2", ("R_SHOULDER", "AUX11")) }}
+{{ bind_engine("+speed", ("L_TRIGGER", "AUX99")) }}
+{{ bind_engine("+attack", ("R_TRIGGER", "AUX11")) }}
+
+{%- elif ENGINE == "goldsrc" %}
+
+// Goldsrc: no triggers, only shoulders
+
+{{ bind_engine("+attack2", ("L_SHOULDER", "AUX10")) }}
+{{ bind_engine("+attack", ("R_SHOULDER", "AUX11")) }}
+
+{%- else %}
+
+// Unhandled engine {{ENGINE}}
+
+{%- endif %}
+
+echo "OK!"

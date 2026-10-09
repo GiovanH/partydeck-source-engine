@@ -5,12 +5,7 @@ CFG_DIR=${CFG_DIR:-"$GAME_DIR/hl2mp/cfg/"}
 
 cp -v ./cfg/*.cfg -t "$CFG_DIR"
 
-# SERVER
-cat << EOF > "$CFG_DIR/0.cfg"
-exec gamepad
-map dm_runoff
-EOF
-echo "> cfg/0.cfg"
+# SERVER prerendered
 
 # CLIENTS
 for i in $(seq 1 3); do
@@ -22,4 +17,3 @@ echo "> cfg/$i.cfg"
 done
 
 ln -s $(pwd) ~/.local/share/partydeck/handlers/ 2>/dev/null
-
