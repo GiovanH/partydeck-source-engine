@@ -1,24 +1,61 @@
-{#- "goldsrc" or "source" #}
 {%- set MOD = MOD | default("hl2") %}
-{%- set ENGINE = ENGINE | default("source") %}
+{%- set ENGINE = ENGINE | default("goldsrc" if MOD == "hl" else "source") %}
 
-{%- macro bind_engine(action, values, bind="bind") %}
-{%- set i = ["source", "goldsrc"].index(ENGINE) -%}
-{{bind}} {{ values[i] }} {{ action }}
+{#- features #}
+{%- set ZOOM = ZOOM | default(ENGINE == "source") %}
+{%- set PHYS_SWAP = PHYS_SWAP | default(MOD in ("hl2",)) %}
+{%- set FLASHLIGHT = FLASHLIGHT | default(False) %}
+{%- set CHANGECLASS = CHANGECLASS | default(False) %}
+
+{%- set DEBUG_ECHO = DEBUG_ECHO | default(False) %}
+
+{%- macro crepr(action, key) -%}
+{%- set action = (('echo ' + key + '; ' + action) if key and DEBUG_ECHO else action) -%}
+{%- set action = ('"' + action + '"' if (" " in action) else action) -%}
+{{action}}
 {%- endmacro -%}
 
+{%- macro bindk(action, key, bind="bind") %}
+{%- set action = crepr(action, key) -%}
+{%- if "+" in action -%}
+alias +al_{{key}} {{action}}
+alias -al_{{key}} {{action|replace("+", "-")}}
+{{bind}} {{key}} +al_{{key}}
+{%- else -%}
+{{bind}} {{key}} {{action}}
+{%- endif -%}
+{%- endmacro -%}
+
+{#- bind action with source or goldsrc name #}
+{%- macro bind_engine(action, values, bind="bind") %}
+{%- set i = ["source", "goldsrc"].index(ENGINE) -%}
+{{ bindk(action, values[i], bind) }}
+{%- endmacro -%}
+
+{#- try all names #}
 {%- macro bind_all(action, values) %}
 {%- for v in values %}
-bind {{ v }} {{ action }}
+{{ bindk(action, v) }}
 {%- endfor -%}
 {%- endmacro -%}
 
-joystick "1"
+// PartyDeck gamepad.cfg for {{ MOD }} ({{ ENGINE}})
+// ZOOM={{ZOOM}}
+// FLASHLIGHT={{FLASHLIGHT}}
+// CHANGECLASS={{CHANGECLASS}}
+// PHYS_SWAP={{PHYS_SWAP}}
 
-// joy_advaxisx "3"
-// joy_advaxisy "1"
-// joy_advaxisr "2"
-// joy_advaxisu "4"
+joystick 1
+
+joyadvanced "1"
+joyadvaxisx "3"
+joyadvaxisy "1"
+joyadvaxisr "2"
+joyadvaxisz "4"
+
+joysidesensitivity "1.0"
+joyadvancedupdate
+
 // joy_pitchsensitivity "1.0"
 // joy_yawsensitivity "-1.25"
 // joy_response_move "5"
@@ -29,25 +66,60 @@ joystick "1"
 // joy_autoaimdampenrange "0.85"
 // joy_autoaimdampen "0.5"
 
+crosshair 1
+
++jlook
+
+{%- if DEBUG_ECHO %}
+developer 1
+{%- endif -%}
+
+{%- if ENGINE == "source" %}
+player_limit_jump_speed 0
+joy_advanced 1
+{%- endif %}
+
 hud_fastswitch 0
 
-// Try all the names.
+// Pad
 
 {{ bind_engine("+jump", ("A_BUTTON", "JOY1")) }}
 {{ bind_engine("+duck", ("B_BUTTON", "JOY2")) }}
 {{ bind_engine("+reload", ("X_BUTTON", "JOY3")) }}
 {{ bind_engine("+use", ("Y_BUTTON", "JOY4")) }}
 
+// Start/select
+
 {{ bind_all("+showscores", ("BACK", "JOY7", "AUX5")) }}
 {{ bind_all("pause",  ("START", "JOY8", "AUX7")) }}
 
-{{ bind_engine("invprev", ("LEFT", "AUX14")) }}
-{{ bind_engine("invnext", ("RIGHT", "AUX15")) }}
-// {{ bind_engine("+speed", ("STICK1", "AUX8")) }}
-// flashlight
-{{ bind_engine('"impulse 100"', ("STICK1", "AUX8")) }}
+// D-pad
 
-{%- if ENGINE == "source" %}
+//{{ bind_engine("invprev", ("LEFT", "AUX14")) }}
+//{{ bind_engine("invnext", ("RIGHT", "AUX15")) }}
+
+{%- if PHYS_SWAP -%}
+{{ bind_engine("phys_swap", ("POV_UP", "AUX12")) }}
+{%- else -%}
+{{ bind_engine("lastinv", ("POV_UP", "AUX12")) }}
+{%- endif -%}
+
+{{ bind_engine("lastinv", ("POV_DOWN", "AUX13")) }}
+
+{{ bind_engine("invprev", ("POV_LEFT", "AUX14")) }}
+{{ bind_engine("invnext", ("POV_RIGHT", "AUX15")) }}
+
+// Sticks
+
+{%- if FLASHLIGHT %}
+// flashlight
+{{ bind_engine("impulse 100", ("STICK1", "AUX8")) }}
+{%- else %}
+// not flashlight
+{{ bind_engine("+speed", ("STICK1", "AUX8")) }}
+{% endif %}
+
+{%- if ZOOM %}
 {{ bind_engine("toggle_zoom", ("STICK2", "AUX99")) }}
 {% endif %}
 
@@ -56,8 +128,9 @@ hud_fastswitch 0
 // Source engine: triggers and shoulders
 
 {{ bind_engine("lastinv", ("L_SHOULDER", "AUX10")) }}
-{{ bind_engine("+attack2", ("R_SHOULDER", "AUX11")) }}
 {{ bind_engine("+speed", ("L_TRIGGER", "AUX99")) }}
+
+{{ bind_engine("+attack2", ("R_SHOULDER", "AUX11")) }}
 {{ bind_engine("+attack", ("R_TRIGGER", "AUX11")) }}
 
 {%- elif ENGINE == "goldsrc" %}
@@ -66,6 +139,9 @@ hud_fastswitch 0
 
 {{ bind_engine("+attack2", ("L_SHOULDER", "AUX10")) }}
 {{ bind_engine("+attack", ("R_SHOULDER", "AUX11")) }}
+
+{{ bind_engine("+attack2", ("L_TRIGGER", "Z AXIS POS")) }}
+{{ bind_engine("+attack", ("R_TRIGGER", "Z AXIS NEG")) }}
 
 {%- else %}
 

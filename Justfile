@@ -4,13 +4,21 @@ diff:
     diff -u -r HL2DM/ HalfLife/ > HalfLife.diff
     exit 0 # OK!
 
+# goldsrc hardcodes controller.cfg
+_render_gp handler ovpath *args:
+    #!/bin/sh
+    [[ -d {{handler}} ]]
+    export ovdir="{{handler}}/overlay/{{ovpath}}"
+    mkdir -p "$ovdir"
+    jinja2 template/gamepad.cfg.j2 {{args}} > "$ovdir"/controller.cfg
+
 render:
-    jinja2 template/gamepad.cfg.j2 -D ENGINE="goldsrc" -D MOD="hl" > HalfLife/overlay/valve/gamepad.cfg
-    jinja2 template/gamepad.cfg.j2 -D ENGINE="source" -D MOD="hl2dm" > HL2DM/overlay/hl2mp/cfg/gamepad.cfg
-    jinja2 template/gamepad.cfg.j2 -D ENGINE="source" -D MOD="bms" > BMS/cfg/gamepad.cfg
+    just _render_gp HalfLife valve     -D MOD="hl"
+    just _render_gp HL2DM    hl2mp/cfg -D MOD="hl2dm"
+    # just _render_gp BMS      bms/cfg   -D MOD="bms"
 
 install_all:
     #!/bin/sh
-    for d in HL2DM BMS HalfLife; do
+    for d in HL2DM HalfLife; do
     (pushd $d && ./install.sh || :;)
     done

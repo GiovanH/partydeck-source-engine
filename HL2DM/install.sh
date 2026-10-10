@@ -4,14 +4,12 @@
 GAME_DIR="./overlay/"
 CFG_DIR=${CFG_DIR:-"$GAME_DIR/hl2mp/cfg/"}
 
-cp -v ./cfg/*.cfg -t "$CFG_DIR"
-
 # SERVER prerendered
 
 # CLIENTS
 for i in $(seq 1 3); do
 cat << EOF > "$CFG_DIR/$i.cfg"
-exec gamepad
+exec controller
 connect 10.99.0.1:27015
 EOF
 echo "> cfg/$i.cfg"
