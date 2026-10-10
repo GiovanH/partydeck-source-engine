@@ -10,7 +10,7 @@
   "args": "-game hl2mp -gamepadui -steam -novid -windowed -noborder -insecure +sv_lan 1 +cl_disablehtmlmotd 1 +exec $INSTANCENUM",
   "env": "",
   "sdl2_override": "No",
-  "pause_between_starts": 5.0,
+  "pause_between_starts": 4.0,
   "use_mangohud": false,
   "use_goldberg": true,
   "ps_xinput": true,

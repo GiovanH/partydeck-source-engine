@@ -1,6 +1,7 @@
 #!/bin/bash
 
-GAME_DIR=$HOME"/.local/share/Steam/steamapps/common/Half-Life 2 Deathmatch"
+# GAME_DIR=$HOME"/.local/share/Steam/steamapps/common/Half-Life 2 Deathmatch"
+GAME_DIR="./overlay/"
 CFG_DIR=${CFG_DIR:-"$GAME_DIR/hl2mp/cfg/"}
 
 cp -v ./cfg/*.cfg -t "$CFG_DIR"

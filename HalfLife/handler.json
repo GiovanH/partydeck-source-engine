@@ -7,13 +7,17 @@
   "path_gameroot": "/home/gio/.local/share/Steam/steamapps/common/Half-Life/",
   "runtime": "scout",
   "exec": "hl.sh",
-  "args": "-novid +sv_lan 1 +exec $INSTANCENUM",
+  "args": "-novid -w $WIDTH -h $HEIGHT +exec $INSTANCENUM.cfg",
   "env": "",
   "sdl2_override": "Srt",
-  "pause_between_starts": 5.0,
+  "pause_between_starts": 2.0,
   "use_mangohud": false,
   "use_goldberg": true,
   "ps_xinput": true,
   "steam_appid": 70,
-  "game_null_paths": []
+  "game_null_paths": [],
+  "overrides": {
+    "vertical_two_player": true,
+    "profile_unique_dirs": true
+  }
 }
